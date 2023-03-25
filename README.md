@@ -10,19 +10,16 @@ To run this project, you will need to have the following installed on your local
 Python 3
 pip
 
-```bash
-pip install foobar
-```
 
 ## Installation
 
 Clone this repository to your local machine.
 ```bash
-git clone https://github.com/yourusername/your-project.git
+git clone https://github.com/harsh-lakhani/5005-project.git
 ```
 Navigate to the project directory.
 ```bash
-cd your-project
+cd 5005-project
 ```
 Install the required packages.
 ```bash
