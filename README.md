@@ -8,6 +8,7 @@ This is a data visualization project to understand what makes a movie or show po
 To run this project, you will need to have the following installed on your local machine:
 
 Python 3
+
 pip
 
 
