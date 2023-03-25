@@ -1,3 +1,7 @@
 pandas
 plotly
 streamlit
+sklearn
+matplotlib
+chardet
+seaborn
