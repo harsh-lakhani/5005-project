@@ -9,5 +9,5 @@ import plotly.subplots as sp
 st.set_page_config(page_title='CONCLUSION', page_icon=':bar_chart:', layout='wide')
 
 # Title
-st.title('💸 CONCLUSION')
+st.markdown(f'<h1 style="color:#ffffff;font-size:48px;">{"💸 CONCLUSION"}</h1>', unsafe_allow_html=True)
 

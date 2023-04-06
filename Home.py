@@ -10,19 +10,16 @@ import plotly.express as px
 st.set_page_config(page_title='', page_icon=':bar_chart:', layout='wide')
 
 # Title
-st.title('HOW TO CREATE POPULAR VIDEO CONTENT?')
+# st.title('BEST VIDEO CONTENT for OVER-THE-TOP (OTT) STREAMING SERVICE')
+
+st.markdown(f'<h1 style="color:#ffffff;font-size:48px;">{"BEST VIDEO CONTENT for OVER-THE-TOP (OTT) STREAMING SERVICE"}</h1>', unsafe_allow_html=True)
 
 # Content
-c1, c2, c3, c4, c5, c6, c7, c8, c9 = st.columns(9)
-c1.image(Image.open('images/cruchy-logo.png'))
-c2.image(Image.open('images/dark-logo.png'))
-c3.image(Image.open('images/disney-logo.png'))
-c4.image(Image.open('images/HBO-logo.png'))
-c5.image(Image.open('images/hulu-logo.png'))
-c6.image(Image.open('images/netlix-logo.png'))
-c7.image(Image.open('images/paramount-logo.png'))
-c8.image(Image.open('images/prime-logo.png'))
-c9.image(Image.open('images/rakuten-logo.png'))
+c1, c2, c3, c4 = st.columns(4)
+c1.image(Image.open('images/disney-logo.png'), width=200)
+c2.image(Image.open('images/HBO-logo.png'), width=200)
+c3.image(Image.open('images/netlix-logo.png'), width=200)
+c4.image(Image.open('images/prime-logo.png'), width=200)
 
 st.write(
     """
