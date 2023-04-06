@@ -43,3 +43,5 @@ c12.write('Popularity')
 # fig, ax = plt.subplots()
 # sns.heatmap(df_heatmap.corr(), ax=ax)
 # st.write(fig)
+
+df = pd.read_csv('titles_all.csv')

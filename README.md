@@ -32,7 +32,7 @@ pip install -r requirements.txt
 To run the Streamlit app, simply execute the following command in your terminal:
 
 ```bash
-streamlit python app.py
+streamlit run app.py
 ```
 This will start the app and open it in your default web browser. You can then interact with the app and explore its features.
 
