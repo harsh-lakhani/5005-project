@@ -12,12 +12,11 @@ st.set_page_config(page_title='In Depth Analysis', page_icon=':bar_chart:', layo
 st.markdown(f'<h1 style="color:#ffffff;font-size:48px;">{"In Depth Analysis"}</h1>', unsafe_allow_html=True)
 
 
-df =  pd.read_csv('data/titles_all_genre_mod.csv')
-
-df.drop(columns=['Unnamed: 0', 'Unnamed: 0.1','description',  'production_countries', 'main_prod_ctry_full'], inplace=True)
+df =  pd.read_csv('data/titles_all.csv')
+df.drop(columns=['Unnamed: 0', 'description','country_code'], inplace=True)
 categories = [ 'platform', 'id', 'type',
         'age_certification', 'genres',
-       'main_prod_ctry']
+       'production_countries']
 neg=  [ 'id', 'title', 'imdb_id']
 for  cat in categories:
     df[cat] = df[cat].astype('category')
@@ -26,13 +25,12 @@ for  cat in categories:
 dimensions = []
 for col in df.columns:
     if col not in neg:
-        if col in categories:
-            new_cat = df[col].dropna()            
+        if col in categories:       
             dim = dict(
-                tickvals=new_cat.cat.codes.unique(),
-                ticktext=new_cat.cat.categories,
+                tickvals=df[col].cat.codes.unique(),
+                ticktext=df[col].cat.categories,
                 label=col, 
-                values=new_cat.cat.codes
+                values=df[col].cat.codes
             )
         else:
             dim = dict(
@@ -50,8 +48,9 @@ fig = go.Figure(
                 colorscale='Electric',
                 showscale=True),
         # customdata=df['title'],
-        labelfont=dict(size=18),
+        labelfont=dict(size=20),
         tickfont=dict(size=16),
+        rangefont=dict(size=16),
     )                       
 )
 

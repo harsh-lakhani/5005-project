@@ -5,3 +5,5 @@ scikit-learn
 matplotlib
 chardet
 seaborn
+folium 
+streamlit_folium
