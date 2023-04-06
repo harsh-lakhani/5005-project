@@ -8,7 +8,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
 
-# Confit
+# Page Config
 st.set_page_config(page_title='OVERVIEW', page_icon=':bar_chart:', layout='wide')
 
 st.markdown(f'<h1 style="color:#ffffff;font-size:48px;">{"🌍 OVERVIEW"}</h1>', unsafe_allow_html=True)
@@ -25,6 +25,25 @@ c11.write('Target Variable')
 c12.write('20,550')
 c12.write('18')
 c12.write('Popularity')
+
+"^ Need to make the above data into a table ^"
+
+c3, c4 = st.columns(2)
+df1 =  pd.read_csv('data/titles_all_genre_mod.csv')
+
+def interactive_plot():
+    col1, col2 = st.columns(2)
+    
+    x_axis_val = col1.selectbox('Select the X-axis', options=df.columns)
+    y_axis_val = col2.selectbox('Select the Y-axis', options=df.columns)
+
+    plot = px.bar(df, x=x_axis_val, y=y_axis_val)
+    st.plotly_chart(plot, use_container_width=True)
+
+"Number of content on each platform"
+
+with c3:    
+    interactive_plot()
 
 # df_heatmap = df.drop(columns=['id', 'title', 'description', 'imdb_id'], axis=1)
 
@@ -43,3 +62,5 @@ c12.write('Popularity')
 # fig, ax = plt.subplots()
 # sns.heatmap(df_heatmap.corr(), ax=ax)
 # st.write(fig)
+
+df = pd.read_csv('titles_all.csv')

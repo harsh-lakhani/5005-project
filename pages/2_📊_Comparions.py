@@ -11,6 +11,8 @@ st.set_page_config(page_title='COMPARISONS', page_icon=':bar_chart:', layout='wi
 # Title
 st.markdown(f'<h1 style="color:#ffffff;font-size:48px;">{"📊 COMPARISONS"}</h1>', unsafe_allow_html=True)
 
+import plotly.express as px
+
 # GEOSPATIAL PLOT
 df = pd.read_csv('data/final_geo.csv')
 
@@ -26,33 +28,20 @@ most_common_genre = grouped.groupby(['latitude', 'longitude'])['genre'].agg(lamb
 # join the most common genre with the grouped data
 grouped = pd.merge(grouped, most_common_genre, on=['latitude', 'longitude'], how='left')
 
-# create a folium map centered on the first location in the dataframe
-m = folium.Map(location=[0,0], zoom_start=1)
+# add the country column to the grouped data
+grouped = pd.merge(grouped, df[['country', 'latitude', 'longitude']].drop_duplicates(), on=['latitude', 'longitude'], how='left')
 
-# create a marker cluster layer for each location
-marker_cluster = folium.plugins.MarkerCluster().add_to(m)
+# create a scatter geo plot using Plotly Express
+fig = px.scatter_geo(grouped, 
+                     lat="latitude",
+                     lon="longitude",
+                     color="genre_y", # color the markers by the most common genre
+                     size="avg_pic", # size the markers by the average picture rating
+                     hover_name="country",
+                     projection="natural earth"
+                     )
 
-# iterate through each location and create a circle marker for each genre
-for i, row in grouped.iterrows():
-    # calculate the size of the circle based on the average picture rating
-    size = row['avg_pic'] 
-    
-    # determine the color of the circle based on the most common genre
-    color_dict = {'action': 'red', 'comedy': 'green', 'drama': 'blue'}
-    color = color_dict.get(row['genre_y'])
-    
-    # create the circle marker and add it to the marker cluster layer
-    folium.CircleMarker(
-        location=[row['latitude'], row['longitude']],
-        radius=size,
-        color=color,
-        fill=True,
-        fill_color=color,
-        fill_opacity=0.7,
-        popup=f"{row['genre_x']} ({row['avg_pic']:.1f})<br>Count: {row['genre_count']}"
-    ).add_to(marker_cluster)
-
-# display the map in Streamlit
-folium_static(m)
+# show the plot within the Streamlit app
+st.plotly_chart(fig)
 
 
