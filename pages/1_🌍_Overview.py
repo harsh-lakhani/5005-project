@@ -15,10 +15,8 @@ st.markdown(f'<h1 style="color:#ffffff;font-size:48px;">{"🌍 OVERVIEW"}</h1>',
 
 c1, c2 = st.columns(2)
 c1.markdown(f'<p style="color:#ffffff;font-size:12px;">{"Data Description"}</p>', unsafe_allow_html=True)
-df = pd.read_csv('data/titles_all_genre_mod.csv')
 c11, c12 = c1.columns(2)
 data = {'Total Content': ['Number of attributes'], 20550: [''], 'Target Variable': ['Popularity']}
-df1 = pd.DataFrame(data)
 c11.write('Total Content')
 c11.write('Number of attributes')
 c11.write('Target Variable')
@@ -29,21 +27,16 @@ c12.write('Popularity')
 "^ Need to make the above data into a table ^"
 
 c3, c4 = st.columns(2)
-df1 =  pd.read_csv('data/titles_all_genre_mod.csv')
+df = pd.read_csv('data/titles_all.csv')
 
 def interactive_plot():
-    col1, col2 = st.columns(2)
-    
-    x_axis_val = col1.selectbox('Select the X-axis', options=df.columns)
-    y_axis_val = col2.selectbox('Select the Y-axis', options=df.columns)
-
-    plot = px.bar(df, x=x_axis_val, y=y_axis_val)
+    plot = px.bar(data_frame=df.groupby("type")["pic"].mean().reset_index(), x="type", y="pic")
     st.plotly_chart(plot, use_container_width=True)
 
-"Number of content on each platform"
-
 with c3:    
+    "Number of content on each platform"
     interactive_plot()
+    "As you can see, creating a movie or a show does not affect the popularity"
 
 # df_heatmap = df.drop(columns=['id', 'title', 'description', 'imdb_id'], axis=1)
 
@@ -62,5 +55,3 @@ with c3:
 # fig, ax = plt.subplots()
 # sns.heatmap(df_heatmap.corr(), ax=ax)
 # st.write(fig)
-
-df = pd.read_csv('titles_all.csv')
