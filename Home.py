@@ -41,7 +41,7 @@ def interactive_plot():
 
 "Number of content on each platform"
 
-interactive_plot()
+# interactive_plot()
 
 # st.bar_chart(df, y = 'Type', x='Month')
 # chart_data = pd.DataFrame(df, columns=["type"])
