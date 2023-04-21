@@ -12,7 +12,7 @@ st.set_page_config(page_title='', page_icon=':bar_chart:', layout='wide')
 # Title
 # st.title('BEST VIDEO CONTENT for OVER-THE-TOP (OTT) STREAMING SERVICE')
 
-st.markdown(f'<h1 style="color:#ffffff;font-size:48px;">{"BEST VIDEO CONTENT for OVER-THE-TOP (OTT) STREAMING SERVICE"}</h1>', unsafe_allow_html=True)
+st.markdown(f'<h1 style=";font-size:48px;">{"BEST VIDEO CONTENT for OVER-THE-TOP (OTT) STREAMING SERVICE"}</h1>', unsafe_allow_html=True)
 
 # Content
 c1, c2, c3, c4 = st.columns(4)

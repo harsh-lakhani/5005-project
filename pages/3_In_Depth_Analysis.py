@@ -14,7 +14,7 @@ from folium.plugins import MarkerCluster
 st.set_page_config(page_title='In Depth Analysis', page_icon=':bar_chart:', layout='wide')
 
 # Title
-st.markdown(f'<h1 style="color:#ffffff;font-size:48px;">{"In Depth Analysis"}</h1>', unsafe_allow_html=True)
+st.markdown(f'<h1 style=";font-size:48px;">{"In Depth Analysis"}</h1>', unsafe_allow_html=True)
 
 def parallel_coordinates():
     df =  pd.read_csv('data/titles_all.csv')

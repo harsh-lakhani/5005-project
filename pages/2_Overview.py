@@ -11,9 +11,9 @@ from sklearn import preprocessing
 # Page Config
 st.set_page_config(page_title='OVERVIEW', page_icon=':bar_chart:', layout='wide')
 
-st.markdown(f'<h1 style="color:#ffffff;font-size:48px;">{"OVERVIEW"}</h1>', unsafe_allow_html=True)
+st.markdown(f'<h1 style=";font-size:48px;">{"OVERVIEW"}</h1>', unsafe_allow_html=True)
 c1, c2 = st.columns(2)
-c1.markdown(f'<p style="color:#ffffff;font-size:12px;">{"Data Description"}</p>', unsafe_allow_html=True)
+c1.markdown(f'<p style=";font-size:12px;">{"Data Description"}</p>', unsafe_allow_html=True)
 c11, c12 = c1.columns(2)
 data = {'Total Content': ['Number of attributes'], 20550: [''], 'Target Variable': ['Popularity']}
 c11.write('Total Content')
