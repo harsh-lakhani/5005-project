@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.subplots as sp
 import streamlit.components.v1 as components
-
+import numpy as np
 import folium
 from streamlit_folium import folium_static
 from folium.plugins import MarkerCluster
@@ -18,24 +18,28 @@ st.markdown(f'<h1 style=";font-size:48px;">{"In Depth Analysis"}</h1>', unsafe_a
 
 def parallel_coordinates():
     df =  pd.read_csv('data/titles_all.csv')
+    print(df.columns)
     df.drop(columns=['Unnamed: 0', 'description','country_code'], inplace=True)
-    categories = [ 'platform', 'id', 'type',
-            'age_certification', 'genres',
-        'production_countries']
+    # log scale the pic column
+    df['pic'] = df['pic'].drop(df[df['pic'] ==0].index)
+    df['pic'] = df['pic'].apply(lambda x:  -1000 if x < 0 else np.log(x))
+
+    categories = [ 'platform', 'id', 'type', 'age_certification', 'genres',  'production_countries']
+    column_order = ['platform', 'type','release_year', 'age_certification', 'genres', 'runtime', 'pic']
     neg=  [ 'id', 'title', 'imdb_id']
     for  cat in categories:
         df[cat] = df[cat].astype('category')
         
 
     dimensions = []
-    for col in df.columns:
+    for col in column_order:
         if col not in neg:
-            if col in categories:       
+            if col in categories:    
                 dim = dict(
                     tickvals=df[col].cat.codes.unique(),
                     ticktext=df[col].cat.categories,
                     label=col, 
-                    values=df[col].cat.codes
+                    values=df[col].cat.codes,
                 )
             else:
                 dim = dict(
@@ -50,8 +54,10 @@ def parallel_coordinates():
     fig = go.Figure(
         data=go.Parcoords(dimensions=dimensions,
             line=dict(color=df['id'].cat.codes,
-                    colorscale='Electric',
-                    showscale=True),
+                    # colorscale='Electric',
+                    colorscale = [[0,'orange'],[1,'orange']]
+                    # showscale=True
+                    ),
             # customdata=df['title'],
             labelfont=dict(size=20),
             tickfont=dict(size=16),
@@ -61,8 +67,8 @@ def parallel_coordinates():
 
     # update the layout to include a title and legend
     fig.update_layout(title='Parallel Coordinate Plot',
-                    margin=dict(l=100,),
-                    height=1000,)
+                    margin=dict(l=120,r=100),
+                    height=800,)
 
     st.plotly_chart(fig, use_container_width=True)
 
