@@ -11,19 +11,19 @@ from streamlit_folium import folium_static
 from folium.plugins import MarkerCluster
 
 # Config
-st.set_page_config(page_title='In Depth Analysis', page_icon=':bar_chart:', layout='wide')
+st.set_page_config(page_title='IN DEPTH ANALYSIS', page_icon=':bar_chart:', layout='wide')
 
 # Title
-st.markdown(f'<h1 style=";font-size:48px;">{"In Depth Analysis"}</h1>', unsafe_allow_html=True)
+st.markdown(f'<h1 style=";font-size:48px;">{"IN DEPTH ANALYSIS"}</h1>', unsafe_allow_html=True)
 
 def parallel_coordinates():
     df =  pd.read_csv('data/titles_all.csv')
-    print(df.columns)
     df.drop(columns=['Unnamed: 0', 'description','country_code'], inplace=True)
     # log scale the pic column
     df['pic'] = df['pic'].drop(df[df['pic'] ==0].index)
-    df['pic'] = df['pic'].apply(lambda x:  -1000 if x < 0 else np.log(x))
-
+    # drop outliers
+    df['pic'] = df['pic'].drop(df[df['pic'] > df['pic'].quantile(0.995)].index)
+    
     categories = [ 'platform', 'id', 'type', 'age_certification', 'genres',  'production_countries']
     column_order = ['platform', 'type','release_year', 'age_certification', 'genres', 'runtime', 'pic']
     neg=  [ 'id', 'title', 'imdb_id']
@@ -98,11 +98,14 @@ def map():
                         color="genre_y", # color the markers by the most common genre
                         size="avg_pic", # size the markers by the average picture rating
                         hover_name="country",
-                        projection="natural earth"
+                        projection="natural earth",
                         )
 
+    # update the layout to include a title and legend
+    fig.update_layout( title='Average Content Rating by Genre and Location',
+                    height=700,)
     # show the plot within the Streamlit app
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, use_container_width=True)
 
 def network():
     with st.container():
@@ -111,7 +114,7 @@ def network():
 
 
 
-tabs = ["Map","Parallel Coordinates", "Network"]
+tabs = ["Location-Genre Plot","Parallel Coordinates Plot", "Actor-Director Network"]
 col1, col2, col3 = st.columns(3)
 with col1:
     button1 = st.button(tabs[0],use_container_width=True, )
