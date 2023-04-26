@@ -21,8 +21,7 @@ def parallel_coordinates():
     df.drop(columns=['Unnamed: 0', 'description','country_code'], inplace=True)
     # log scale the pic column
     df['pic'] = df['pic'].drop(df[df['pic'] ==0].index)
-    # drop outliers
-    df['pic'] = df['pic'].drop(df[df['pic'] > df['pic'].quantile(0.995)].index)
+    df['pic'] = np.log(df['pic'])
     
     categories = [ 'platform', 'id', 'type', 'age_certification', 'genres',  'production_countries']
     column_order = ['platform', 'type','release_year', 'age_certification', 'genres', 'runtime', 'pic']
@@ -30,7 +29,9 @@ def parallel_coordinates():
     for  cat in categories:
         df[cat] = df[cat].astype('category')
         
-
+    pic_slider = st.slider('Select the PIC Range', min_value=0.0, max_value=1.0, value=st.session_state['pic_slider'], step=0.05)
+    if pic_slider != st.session_state['pic_slider']:
+        st.session_state['pic_slider'] = pic_slider
     dimensions = []
     for col in column_order:
         if col not in neg:
@@ -42,9 +43,14 @@ def parallel_coordinates():
                     values=df[col].cat.codes,
                 )
             else:
+                constraint_range = [df[col].min(), df[col].max()]
+                if col == 'runtime':
+                    constraint_range = [df[col].quantile(0), df[col].quantile(0.9)]
+                elif col == 'pic':
+                    constraint_range = [df[col].quantile(st.session_state['pic_slider'][0]), df[col].quantile(st.session_state['pic_slider'][1])]
                 dim = dict(
                     range=[df[col].min(), df[col].max()],
-                    constraintrange=[df[col].quantile(0), df[col].quantile(0.9)],
+                    constraintrange=constraint_range,
                     label=col, 
                     values=df[col]
                 )
@@ -112,8 +118,6 @@ def network():
         components.iframe("https://public.tableau.com/views/Network_16814579200620/SimpleNetworkGraph?:language=en-US&publish=yes&:display_count=n&:showVizHome=no&:embed=true",
                     height=1800) 
 
-
-
 tabs = ["Location-Genre Plot","Parallel Coordinates Plot", "Actor-Director Network"]
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -122,15 +126,22 @@ with col2:
     button2 = st.button(tabs[1],use_container_width=True)
 with col3:
     button3 = st.button(tabs[2],use_container_width=True)
-    
-# set the default tab
-if not button1 and not button2 and not button3:
-    button1 = True
 
+if 'tab' not in st.session_state:
+    st.session_state.tab = 0
+if 'pic_slider' not in st.session_state:
+    st.session_state['pic_slider']= (0.0, 0.9)
 # click on the tab buttons to switch between tabs
 if button1:
-    map()
+    st.session_state.tab = 0
 elif button2:
-    parallel_coordinates()
+    st.session_state.tab = 1
 elif button3:
+    st.session_state.tab = 2
+
+if st.session_state.tab == 0:
+    map()
+elif st.session_state.tab == 1:
+    parallel_coordinates()
+elif st.session_state.tab == 2:
     network()
