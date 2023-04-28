@@ -1,4 +1,4 @@
-# VISUALIZATION TOOL TO UNDERSTAND WHAT MAKES A MOVIE/SHOW POPULAR
+# Popular Video Content Recommendation Tool for Over-The-Top Streaming Services
 
 This is a data visualization project to understand what makes a movie or show popular. 
 
