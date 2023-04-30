@@ -34,7 +34,7 @@ def our_insights():
 
     message = '''\
     <div style="font-size: 18px;">
-        <div>* Please Note:</div>
+        <div>*Note:</div>
         <div>On average, considering all genres, actor-director combinations do not have a high PIC, therefore, for recommendations, select the combination based on other factors (genre, budget, type).</div>
         <div>Please experiment with the tool below to get a recommendation.</div>
         <div>Navigate to previous pages for a deeper analysis if required.</div>
