@@ -8,12 +8,53 @@ from sklearn import preprocessing
 st.set_page_config(page_title='RECOMMENDATION', page_icon=':bar_chart:', layout='wide')
 
 def our_insights():
-    st.title('OUR INSIGHTS')
+    st.title('INSIGHTS')
+
+    message = "Important insights for reference to users using the tool below:"
+    st.write(f'<h1 style="font-size:30px;">{message}</h1>', unsafe_allow_html=True)
+
+    message = "Depending on whether the user wants to create a movie or show, the table below shows the optimal settings:"
+    st.write(f'<h1 style="font-size:18px;">{message}</h1>', unsafe_allow_html=True)
+
+    table_data = [
+        ["", "Age Certification", "Runtime", "Genres"],
+        ["Shows", "TV-Y7", "128 min", "scifi, action, fantasy"],
+        ["Movies", "PG-13", "208 min", "fantasy, animation, scifi"],
+    ]
+
+    df = pd.DataFrame(table_data[1:], columns=table_data[0], index=None)
+    df = df.set_index("")
+
+    table_style = [
+    {"selector": "table", "props": [("width", "50px"), ("font-size", "12px")]}
+    ]
+
+    c1, c2 = st.columns(2)
+    c1.table(df)
+
+    message = '''\
+    <div style="font-size: 18px;">
+        <div>* Please Note:</div>
+        <div>On average, considering all genres, actor-director combinations do not have a high PIC, therefore, for recommendations, select the combination based on other factors (genre, budget, type).</div>
+        <div>Please experiment with the tool below to get a recommendation.</div>
+        <div>Navigate to previous pages for a deeper analysis if required.</div>
+    </div>
+    '''
+
+    st.write(f'{message}', unsafe_allow_html=True)
 
 def get_recommendations():
     st.markdown(f'<h1 style=";font-size:48px;">{"RECOMMENDATION"}</h1>', unsafe_allow_html=True)
     df =  pd.read_csv('data/titles_all.csv')
-    df.drop(columns=['Unnamed: 0', 'description','country_code','freqword','wordcount'], inplace=True)
+    df = df.rename(columns={
+        'genres': 'Genre',
+        'type': 'Type',
+        'age_certification': 'Age Certification',
+        'runtime': 'Runtime',
+        'platform': 'Platform'
+    })
+    df = df.drop(columns=['Unnamed: 0', 'description', 'country_code', 'freqword', 'wordcount'])
+
     # init a session state
     if 'selected_attributes' not in st.session_state:
         st.session_state.selected_attributes = []
@@ -21,36 +62,26 @@ def get_recommendations():
     # Define a dictionary of available attributes and their corresponding selectors
     all_attributes = {
         'Content Type': {
-            'df_column': 'type', # the column name in the dataframe
-            'options': df['type'].dropna().unique().tolist(),
+            'df_column': 'Type', # the column name in the dataframe
+            'options': df['Type'].dropna().unique().tolist(),
         },
         'Platform': {
-            'df_column': 'platform', # the column name in the dataframe
-            'options': df['platform'].dropna().unique().tolist(),
+            'df_column': 'Platform', # the column name in the dataframe
+            'options': df['Platform'].dropna().unique().tolist(),
         },
         'Age Certification': { 
-            'df_column': 'age_certification', # the column name in the dataframe
-            'options': df['age_certification'].dropna().unique().tolist(),
+            'df_column': 'Age Certification', # the column name in the dataframe
+            'options': df['Age Certification'].dropna().unique().tolist(),
         },
-        'Genres': {
-            'df_column': 'genres', # the column name in the dataframe
-            'options': df['genres'].dropna().unique().tolist(),
-        },
-        'Production Countries': {
-            'df_column': 'production_countries', # the column name in the dataframe
-            'options':  df['production_countries'].dropna().unique().tolist(),
-        },
-        'Release Year': {
-            'df_column': 'release_year', # the column name in the dataframe
-            'min': int(df['release_year'].min()),
-            'max': int(df['release_year'].max()),
-            'value': (int(df['release_year'].min()), int(df['release_year'].max())),
+        'Genre': {
+            'df_column': 'Genre', # the column name in the dataframe
+            'options': df['Genre'].dropna().unique().tolist(),
         },
         'Runtime': {
-            'df_column': 'runtime', # the column name in the dataframe
-            'min': int(df['runtime'].min()),
-            'max': int(df['runtime'].max()),
-            'value': (int(df['runtime'].min()), int(df['runtime'].max())),
+            'df_column': 'Runtime', # the column name in the dataframe
+            'min': int(df['Runtime'].min()),
+            'max': int(df['Runtime'].max()),
+            'value': (int(df['Runtime'].min()), int(df['Runtime'].max())),
         },
     }
 
@@ -70,7 +101,7 @@ def get_recommendations():
                 st.experimental_rerun()
 
 
-    filtered =df.copy()
+    filtered = df.drop(columns=['production_countries', 'id', 'release_year']).copy()
     filtered = filtered.rename(columns={'pic':'Score', 'title':'Name'})
     for attribute, value in st.session_state.selected_attributes:
         df_column = value['df_column']
@@ -83,8 +114,8 @@ def get_recommendations():
             
     filtered = filtered.sort_values(by=['Score'], ascending=False)
     filtered = filtered.reset_index(drop=True)
-    st.markdown(f'<h2 style=";font-size:48px;">{"Top 5 Recommended Video"}</h2>', unsafe_allow_html=True)
-    st.table(filtered[['Name','Score']].head(5))
+    st.markdown(f'<h2 style=";font-size:48px;">{"Top 5 Recommendations"}</h2>', unsafe_allow_html=True)
+    st.table(filtered.head(5))
 
     # Display the filter list
     for idx,(attribute,value) in enumerate(st.session_state.selected_attributes):

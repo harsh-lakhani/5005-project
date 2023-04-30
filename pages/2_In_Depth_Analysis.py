@@ -97,12 +97,15 @@ def map():
     # add the country column to the grouped data
     grouped = pd.merge(grouped, df[['country', 'latitude', 'longitude']].drop_duplicates(), on=['latitude', 'longitude'], how='left')
 
+    # rename the columns
+    grouped = grouped.rename(columns={"genre_y": "Genre", "avg_pic": "Popularity"})
+
     # create a scatter geo plot using Plotly Express
     fig = px.scatter_geo(grouped, 
                         lat="latitude",
                         lon="longitude",
-                        color="genre_y", # color the markers by the most common genre
-                        size="avg_pic", # size the markers by the average picture rating
+                        color="Genre", # color the markers by the most common genre
+                        size="Popularity", # size the markers by the average picture rating
                         hover_name="country",
                         projection="natural earth",
                         )
